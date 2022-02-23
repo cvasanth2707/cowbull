@@ -6,13 +6,14 @@ import logging
 logging.basicConfig(
     filename='',
     filemode='w',
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s: %(message)s',
 )
 
 WORD_LENGTH = 4
 CHANCES = 10
 WORDS_FILE = "words.txt"  # got ti from https://7esl.com/4-letter-words/
+
 
 def bull_cow_logic(user_word, target_word):
     """
@@ -23,34 +24,45 @@ def bull_cow_logic(user_word, target_word):
     """
     bull = 0
     cow = 0
-    bull_chars = [i for i in target_word]
-    cow_dict = {}
-    for c in user_word:
-        if c in cow_dict:
-            cow_dict[c] += 1
+    target_word_list = [i for i in target_word]
+
+    target_word_dict = {}
+    for c in target_word:
+        if c in target_word_dict:
+            target_word_dict[c] += 1
         else:
-            cow_dict[c] = 1
-    logging.debug(f"cow dict : {cow_dict}")
+            target_word_dict[c] = 1
+    logging.debug(f"target_word_dict : {target_word_dict}")
+
+    user_word_dict = {}
+    for c in user_word:
+        if c in user_word_dict:
+            user_word_dict[c] += 1
+        else:
+            user_word_dict[c] = 1
+    logging.debug(f"user_word_dict : {user_word_dict}")
 
     for i in range(WORD_LENGTH):
         logging.info(i)
         if user_word[i] == target_word[i]:
             logging.debug("bull ++")
             bull += 1
-            bull_chars.remove(user_word[i])
+            target_word_list.remove(user_word[i])
         elif user_word[i] in target_word:
-            logging.debug(f"bull_chars : {bull_chars}")
-            if user_word[i] in bull_chars:
-                if cow_dict[user_word[i]] > 1:
-                    # we need this to solve test_1bull1 test.
+            logging.debug(f"target_word_list : {target_word_list}")
+            if user_word[i] in target_word_list:
+                if user_word_dict[user_word[i]] > target_word_dict[user_word[i]]:
+                    # we need this to solve test_1bull1 test and test_target_with_2chars_same.
                     # Using this logic we can avoid incrementing
                     # cow if same chars present in future/ahead too.
-                    cow_dict[user_word[i]] -= 1
+                    user_word_dict[user_word[i]] -= 1
+                    logging.debug(f"user_word_dict--> : {user_word_dict}")
                 else:
                     logging.debug("cow ++")
                     cow += 1
-                    bull_chars.remove(user_word[i])
-        # print(f"bull_chars -----: {bull_chars}")
+                    target_word_list.remove(user_word[i])
+        # print(f"target_word_list -----: {target_word_list}")
+    logging.debug(f"user_word_dict--final-> : {user_word_dict}")
     logging.info(f"{bull}B, {cow}C")
     return bull, cow
 

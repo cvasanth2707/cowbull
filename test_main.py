@@ -56,5 +56,32 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(bull, 0)
         self.assertEqual(cow, 2)
 
+    def test_target_with_2chars_same(self):  # failing, need to check , getting 1b 2c
+        # scenario is when target word has same letter more than once
+        bull, cow = m.play(target_word="text", user_word="extt")
+        self.assertEqual(bull, 1)
+        self.assertEqual(cow, 3)
+
+    def test_pppp(self):
+        bull, cow = m.play(target_word="pppp", user_word="xppx")
+        self.assertEqual(bull, 2)
+        self.assertEqual(cow, 0)
+
+    def test_ppxp(self):
+        bull, cow = m.play(target_word="ppxp", user_word="xppx")
+        self.assertEqual(bull, 1)
+        self.assertEqual(cow, 2)
+
+    def test_ppxp(self):
+        bull, cow = m.play(target_word="pxxp", user_word="xppx")
+        self.assertEqual(bull, 0)
+        self.assertEqual(cow, 4)
+
+    def test_xoxo(self):
+        bull, cow = m.play(target_word="xoxo", user_word="xxxx")
+        self.assertEqual(bull, 2)
+        self.assertEqual(cow, 0)
+
+
 if __name__ == '__main__':
     unittest.main()
